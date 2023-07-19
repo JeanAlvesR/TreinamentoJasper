@@ -1,0 +1,1048 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RelatorioSubRelatorioUniversidade" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="deda07ca-a46a-4d1e-ba5e-73134a20751d">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Escola"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<subDataset name="aulasprofessores" uuid="7767ec8b-e223-4ae4-ac77-a41b128660cd">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Escola"/>
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<parameter name="filtroprofessorcpf" class="java.lang.Long"/>
+		<queryString>
+			<![CDATA[select curso.nome as "Curso", d.nome as "Disciplina", diadasemana.nome as "Semana", diasdeaula.horario as "Horário"  
+from aula 
+inner join curso on curso.codigo = aula.codigocurso 
+inner join disciplina d ON d.codigo = aula.codigodisciplina and d.codigocurso = aula.codigocurso
+inner join diasdeaula
+on diasdeaula.numerosemestre = aula.numerosemestre  
+and aula.codigocurso = diasdeaula.codigocurso
+and aula.codigodisciplina = diasdeaula.codigodisciplina 
+and aula.numeroturma = diasdeaula.numeroturma 
+and aula.numerosubturma = diasdeaula.numerosubturma 
+inner join diadasemana on diadasemana.codigo = diasdeaula.codigodiasemana 
+where aula.cpfprofessor =  $P{filtroprofessorcpf}]]>
+		</queryString>
+		<field name="Curso" class="java.lang.String"/>
+		<field name="Disciplina" class="java.lang.String"/>
+		<field name="Semana" class="java.lang.String"/>
+		<field name="Horário" class="java.lang.String"/>
+		<variable name="aulaLecionadasInterno" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[1]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="QuantidadeAulas" uuid="84da32db-42e4-45f4-8543-36c1cb36430e">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Escola"/>
+		<queryString language="SQL">
+			<![CDATA[select p.nome as "Professor", count(1) as "Qtd Aulas"
+from professor p 
+inner join aula a on a.cpfprofessor = p.cpf 
+group by p.nome
+order by p.nome]]>
+		</queryString>
+		<field name="Professor" class="java.lang.String"/>
+		<field name="Qtd Aulas" class="java.lang.Long"/>
+	</subDataset>
+	<parameter name="definirTipoRelatorio" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="exibirTipoRelatorio" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="exibirDataHoraEmissao" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="exibirPaginacao" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="exibirAula" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="exibirSubRelatorio" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="exibirGraficoAulasXProfessores" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select p.cpf as "CPF", p.nome as "Nome", p.datanascimento as "Data Nascimento", p.cidade as "Cidade", p.bairro as "Bairro", p.estado as "UF", p.cep as "CEP", p.logradouro as "Logradouro" ,p.codigodepartamento as "Cod. Depart.", d.nome as "Departamento"
+from professor p 
+inner join departamento d on d.codigo = p.codigodepartamento 
+group by d.nome, p.cpf, p.nome, p.datanascimento, p.cidade, p.codigodepartamento
+order by d.nome]]>
+	</queryString>
+	<field name="CPF" class="java.lang.Long"/>
+	<field name="Nome" class="java.lang.String"/>
+	<field name="Data Nascimento" class="java.util.Date"/>
+	<field name="Cidade" class="java.lang.String"/>
+	<field name="Bairro" class="java.lang.String"/>
+	<field name="UF" class="java.lang.String"/>
+	<field name="CEP" class="java.lang.Long"/>
+	<field name="Logradouro" class="java.lang.String"/>
+	<field name="Cod. Depart." class="java.lang.String"/>
+	<field name="Departamento" class="java.lang.String"/>
+	<variable name="totalGeralProfessores" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[1]]></variableExpression>
+	</variable>
+	<variable name="aulaLecionadasExterno" class="java.lang.Integer" calculation="System">
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="totalProfessorePorDepartamento" class="java.lang.Integer" resetType="Group" resetGroup="Grupo Departamento" calculation="Sum">
+		<variableExpression><![CDATA[1]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<group name="Grupo Departamento">
+		<groupExpression><![CDATA[$F{Departamento}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<printWhenExpression><![CDATA[$P{definirTipoRelatorio} != 2]]></printWhenExpression>
+				<staticText>
+					<reportElement x="0" y="15" width="95" height="15" isRemoveLineWhenBlank="true" uuid="e24509fb-e77f-45a7-82d4-ee49dc351b2f">
+						<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5" lineColor="#413BFF"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CPF]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="95" y="15" width="92" height="15" isRemoveLineWhenBlank="true" uuid="bbcaeba1-5159-4e99-be26-b8df9877141e">
+						<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5" lineColor="#413BFF"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nome]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="187" y="15" width="92" height="15" isRemoveLineWhenBlank="true" uuid="cb0848ac-dc60-4ec6-9e62-42ab5d3e7cb8">
+						<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5" lineColor="#413BFF"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data Nascimento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="279" y="15" width="31" height="15" isRemoveLineWhenBlank="true" uuid="d8f1e7a5-12ac-4f36-afd1-f64c87e3d7e5">
+						<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5" lineColor="#413BFF"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[UF]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="310" y="15" width="92" height="15" isRemoveLineWhenBlank="true" uuid="7f842dee-50fb-414e-b111-ddaa29b9bc12">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5" lineColor="#413BFF"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cidade]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="402" y="15" width="68" height="15" isRemoveLineWhenBlank="true" uuid="730cafdc-c4bb-405e-8d6e-a2a3aab7022f">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5" lineColor="#413BFF"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Bairro]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="470" y="15" width="85" height="15" isRemoveLineWhenBlank="true" uuid="9b39e1f3-dfb4-44d2-bb63-07566e5f60cb">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5" lineColor="#413BFF"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Logradouro]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="130" height="15" backcolor="#462EFF" uuid="8aa33ce4-f2ca-4cdc-8c2c-ba5e4c8c62b3"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+						<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Cód. Depart.: "+$F{Cod. Depart.}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="130" y="0" width="425" height="15" backcolor="#462EFF" uuid="a8cb3ade-d1a5-42eb-9748-95f3507251ad"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+						<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Departamento: "+$F{Departamento}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15">
+				<printWhenExpression><![CDATA[$P{definirTipoRelatorio} != 2]]></printWhenExpression>
+				<textField evaluationTime="Band">
+					<reportElement positionType="Float" mode="Opaque" x="315" y="0" width="240" height="15" backcolor="#A98FFF" uuid="c77fecfc-1433-4078-813c-a75c6f7d46ab"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total de professores: " + $V{totalProfessorePorDepartamento}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="60" uuid="7b9069b3-02a4-4a33-82aa-005e0bfb68e2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="0" width="60" height="60" uuid="40758afc-e863-4e03-a9a0-72e9be6db74a"/>
+			</rectangle>
+			<line>
+				<reportElement x="60" y="31" width="495" height="1" uuid="12f04a83-fac0-4160-8a00-2dc0ac09bc05"/>
+			</line>
+			<textField>
+				<reportElement x="447" y="8" width="106" height="15" uuid="330e7b28-8be2-46aa-952c-c71bd9b76b80">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{exibirTipoRelatorio}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Relatório tipo "+ ($P{definirTipoRelatorio} !=2 ? 1 : 2)]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="169" y="0" width="219" height="30" uuid="d7a57a6d-9628-4930-87e4-d01fa266d5a1"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Support → RELATÓRIO UNIVERSIDADE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="14" width="30" height="33" uuid="ffdc148b-7a6f-4fda-b317-5681685b7edc"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[∰]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="61" y="44" width="129" height="15" uuid="9439eee8-5586-4671-885c-e3684ba32d96">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Presidente Prudente"]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="391" y="40" width="79" height="17" uuid="a4e6a80e-a77b-42bc-a7fd-db00cfff760d">
+					<printWhenExpression><![CDATA[$P{exibirDataHoraEmissao}]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data: "+new SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="477" y="40" width="76" height="17" uuid="efbd25d6-af13-40ed-8acd-225c79afbdc2">
+					<printWhenExpression><![CDATA[$P{exibirDataHoraEmissao}]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Horário: "+new SimpleDateFormat("HH:mm").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{definirTipoRelatorio} == 2]]></printWhenExpression>
+			<staticText>
+				<reportElement x="0" y="15" width="95" height="15" isRemoveLineWhenBlank="true" uuid="6a518a94-f21e-4cbd-8212-78441c7e9d97">
+					<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5452"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CPF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="15" width="92" height="15" isRemoveLineWhenBlank="true" uuid="4fbc799a-74b6-488e-a79f-dac9a803e354">
+					<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5452"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="187" y="15" width="92" height="15" isRemoveLineWhenBlank="true" uuid="2ea312b1-ea9a-423a-b03c-f91d5fb56cb7">
+					<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5452"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Nascimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="279" y="15" width="92" height="15" isRemoveLineWhenBlank="true" uuid="eb4f70ae-89d4-482d-80f5-ea5208a3b063">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5452"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="15" width="76" height="15" isRemoveLineWhenBlank="true" uuid="e4592d8a-417f-4d4a-93b8-c23e616492e5">
+					<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5452"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cod. Depart.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="447" y="15" width="108" height="15" isRemoveLineWhenBlank="true" uuid="fd19d7f4-8742-4698-bc8d-63e78f335b50">
+					<printWhenExpression><![CDATA[!$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5452"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Departamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="15" backcolor="#FF5754" uuid="e03b660f-7877-4a5b-b70d-4794c4a12ce8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Professores]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="75" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{definirTipoRelatorio} != 2]]></printWhenExpression>
+			<textField>
+				<reportElement x="0" y="15" width="95" height="15" uuid="2fc9731a-6297-4228-af15-5f4e2ca57c91"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CPF}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="187" y="15" width="92" height="15" uuid="afc3a1c6-6139-49bd-b0d1-7fde584900ad"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{Data Nascimento})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="15" width="92" height="15" uuid="389b95b6-17f2-425a-997b-29c2b06e08e4"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="279" y="15" width="31" height="15" uuid="6191130a-641c-43cd-853c-d43938db9058"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UF}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="15" width="92" height="15" uuid="e649e78d-092f-4d2f-9392-4fc3f293a80f"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cidade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="402" y="15" width="68" height="15" uuid="86a6e5c0-8d1f-4258-8a62-ab54f260c056"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Bairro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="15" width="85" height="15" uuid="89b9e804-76b3-4431-bae6-e64adcf68baf"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Logradouro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="402" y="0" width="68" height="15" isRemoveLineWhenBlank="true" uuid="48e850c6-72f2-4341-bec0-ee0b262585a5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bairro]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="21aea4d9-dfb3-44d8-9acb-60edcbf7ac18">
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CPF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="187" y="0" width="92" height="15" isRemoveLineWhenBlank="true" uuid="fa256b66-7175-4c84-9562-be4b49250159">
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Nascimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="0" width="92" height="15" isRemoveLineWhenBlank="true" uuid="34d72dd0-790e-42e5-98f4-c3a6e1e9e260">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="279" y="0" width="31" height="15" isRemoveLineWhenBlank="true" uuid="b239e096-7c1d-4a04-87bc-fd5d1177001f">
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="470" y="0" width="85" height="15" isRemoveLineWhenBlank="true" uuid="f0cd66ab-efa7-41f3-beb5-474de175b5eb">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Logradouro]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="0" width="92" height="15" isRemoveLineWhenBlank="true" uuid="0e078c05-9d9b-4994-9087-be82189c84b5">
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#413BFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<frame>
+				<reportElement x="0" y="30" width="380" height="45" isRemoveLineWhenBlank="true" uuid="5a45063f-f3b9-4867-aff9-ef145fd5cb5d">
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<componentElement>
+					<reportElement x="0" y="15" width="380" height="15" isRemoveLineWhenBlank="true" uuid="6d6b7747-320a-4847-8283-eb4be035843f"/>
+					<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+						<datasetRun subDataset="aulasprofessores" uuid="ddd67c3a-9333-46b6-882c-8884b1fb09d3">
+							<datasetParameter name="filtroprofessorcpf">
+								<datasetParameterExpression><![CDATA[$F{CPF}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+							<returnValue fromVariable="aulaLecionadasInterno" toVariable="aulaLecionadasExterno"/>
+						</datasetRun>
+						<jr:listContents height="15" width="380">
+							<textField>
+								<reportElement x="0" y="0" width="120" height="15" uuid="d129da00-33f6-425a-bd4a-a35dd19835ca">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box>
+									<pen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans Mono" size="8"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{Curso}]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="120" y="0" width="120" height="15" uuid="283703af-3931-4853-a8ae-b11e087ca086">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box>
+									<pen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans Mono" size="8"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{Disciplina}]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="240" y="0" width="90" height="15" uuid="241d789e-5886-4e38-8641-0ac4977aad8e">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box>
+									<pen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans Mono" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{Semana}]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="330" y="0" width="50" height="15" uuid="d754c545-1afa-48ea-b103-4a2932c4faea">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box>
+									<pen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans Mono" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{Horário}]]></textFieldExpression>
+							</textField>
+						</jr:listContents>
+					</jr:list>
+				</componentElement>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="120" height="15" backcolor="#6964FA" uuid="c5e8f61f-2875-4419-941b-5b3c7195772f"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Curso]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="120" y="0" width="120" height="15" backcolor="#6964FA" uuid="2fece009-c415-4af2-9066-2c5efcffc097"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Disciplina]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="240" y="0" width="90" height="15" backcolor="#6964FA" uuid="bb5b5592-abbc-4c7c-b12a-4335ce593ede"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Dia Semana]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="330" y="0" width="50" height="15" backcolor="#6964FA" uuid="1c6bdea1-1ff8-4826-aa92-93d13652545d"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Horário]]></text>
+				</staticText>
+				<textField evaluationTime="Band">
+					<reportElement positionType="Float" x="0" y="30" width="240" height="15" uuid="760d4f50-b460-4832-900f-510782e8485b"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total de aulas: " + $V{aulaLecionadasExterno}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+		<band height="75">
+			<printWhenExpression><![CDATA[$P{definirTipoRelatorio} == 2]]></printWhenExpression>
+			<textField>
+				<reportElement x="447" y="15" width="108" height="15" uuid="f828c566-3435-4e76-a689-eb6200de64d6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF6461"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Departamento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="187" y="15" width="92" height="15" uuid="d808d99c-cf3d-4f48-bf1e-2f88975d7f2b"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF6461"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{Data Nascimento})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="279" y="15" width="92" height="15" uuid="20add9e3-3677-4ec0-bce3-f4b9101a9f55"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF6461"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cidade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="371" y="15" width="76" height="15" uuid="c3104f7e-51de-4c28-8540-60e25044309c"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF6461"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cod. Depart.}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="15" width="95" height="15" uuid="fc5fd387-ae80-4811-8f03-33c9928179ab"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF6461"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CPF}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="15" width="92" height="15" uuid="154b6e2f-fc50-4bc0-acee-2f81ea914d39"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF6461"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Nome}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="0" y="30" width="380" height="45" isRemoveLineWhenBlank="true" uuid="3f2f4593-d8c8-43ab-9f87-bd208cadf073">
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<componentElement>
+					<reportElement x="0" y="15" width="380" height="15" isRemoveLineWhenBlank="true" uuid="56c2d9db-35b6-4628-bd52-b6a3614acdd8"/>
+					<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+						<datasetRun subDataset="aulasprofessores" uuid="4e2c1c4a-c406-46fd-9969-728d4327173d">
+							<datasetParameter name="filtroprofessorcpf">
+								<datasetParameterExpression><![CDATA[$F{CPF}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+							<returnValue fromVariable="aulaLecionadasInterno" toVariable="aulaLecionadasExterno"/>
+						</datasetRun>
+						<jr:listContents height="15" width="380">
+							<textField>
+								<reportElement x="0" y="0" width="120" height="15" uuid="34198563-e591-4fb4-a02c-6dfe04fa1f5a">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box>
+									<pen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans Mono" size="8"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{Curso}]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="120" y="0" width="120" height="15" uuid="8f0fe8dd-b48e-4897-a5e2-fe10f0a53033">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box>
+									<pen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans Mono" size="8"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{Disciplina}]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="240" y="0" width="90" height="15" uuid="79cb74d2-918a-415e-ad4b-5fa1ab46df19">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box>
+									<pen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans Mono" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{Semana}]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="330" y="0" width="50" height="15" uuid="0d29d0e8-0928-4ca0-9f72-22479a573206">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box>
+									<pen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans Mono" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{Horário}]]></textFieldExpression>
+							</textField>
+						</jr:listContents>
+					</jr:list>
+				</componentElement>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="120" height="15" backcolor="#52FFC8" uuid="f674d30c-d308-46f5-968a-9dc868c820b6"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Curso]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="120" y="0" width="120" height="15" backcolor="#52FFC8" uuid="124e2d59-cfb5-4f31-859a-41a312a08097"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Disciplina]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="240" y="0" width="90" height="15" backcolor="#52FFC8" uuid="07cdbadf-8428-42e1-861b-f375734b7c4f"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Dia Semana]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="330" y="0" width="50" height="15" backcolor="#52FFC8" uuid="3e2a1d79-e396-48ef-8ac7-52adc98f9eb6"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Horário]]></text>
+				</staticText>
+				<textField evaluationTime="Band">
+					<reportElement positionType="Float" x="0" y="30" width="240" height="15" uuid="49b6b448-b3db-4735-b5f9-f6c9f74ad89f"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total de aulas: " + $V{aulaLecionadasExterno}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<staticText>
+				<reportElement x="371" y="0" width="76" height="15" isRemoveLineWhenBlank="true" uuid="cc78173c-98b4-4375-bdd9-281661e1630e">
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5452"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cod. Depart.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="0" width="92" height="15" isRemoveLineWhenBlank="true" uuid="741d88bc-8f01-4418-9776-89ecf0fb33c2">
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5452"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="6d54d453-6907-40ad-ae5d-4a9d6febefb9">
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5452"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CPF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="279" y="0" width="92" height="15" isRemoveLineWhenBlank="true" uuid="00b9b3c6-a37d-4a1d-ac62-36eb856dd368">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5452"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="447" y="0" width="108" height="15" isRemoveLineWhenBlank="true" uuid="932678a1-8013-44c3-8b98-857a20670507">
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5452"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Departamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="187" y="0" width="92" height="15" isRemoveLineWhenBlank="true" uuid="34aba988-57b7-49a2-99dd-01874deeb181">
+					<printWhenExpression><![CDATA[$P{exibirAula}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5452"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Nascimento]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="29" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement x="513" y="0" width="41" height="15" uuid="839c475e-3d5e-47a2-81b0-2e0c893f528a">
+					<printWhenExpression><![CDATA[$P{exibirPaginacao}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="398" y="15" width="157" height="14" forecolor="#787878" uuid="75bebfbc-68bb-4fa1-95b7-68c35972ab5b"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans Mono"/>
+				</textElement>
+				<text><![CDATA[Jean Alves Rocha - Support]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="437" y="0" width="76" height="15" uuid="3a1e8d83-3d10-4cba-8c4d-1c579c766957">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{exibirPaginacao}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="425" splitType="Stretch">
+			<textField>
+				<reportElement x="140" y="20" width="270" height="15" forecolor="#FF0400" uuid="77bb782c-675e-4c0b-bf16-5e66c9464a87">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FF0400"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="12" isBold="true" isItalic="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total de Professores "+$V{totalGeralProfessores}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="50" width="555" height="40" uuid="589979cf-dc8c-4585-8d7a-d4cb04d8ed71">
+					<printWhenExpression><![CDATA[$P{exibirSubRelatorio}]]></printWhenExpression>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["C:/Users/jeana/JaspersoftWorkspace/MyReports/templateSubRelatorioDisciplinas.jasper"]]></subreportExpression>
+			</subreport>
+			<frame>
+				<reportElement positionType="Float" x="0" y="110" width="555" height="270" isRemoveLineWhenBlank="true" uuid="3b277954-5937-4d32-a31e-24f39465bd0b">
+					<printWhenExpression><![CDATA[$P{exibirGraficoAulasXProfessores}]]></printWhenExpression>
+				</reportElement>
+				<textField>
+					<reportElement x="140" y="20" width="270" height="15" forecolor="#0090FF" uuid="faede1ac-5434-4226-9951-45432e6cb9cc">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="1.0" lineColor="#00FF59"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="12" isBold="true" isItalic="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Gráfico Aulas x Professor "]]></textFieldExpression>
+				</textField>
+				<pieChart>
+					<chart evaluationTime="Report">
+						<reportElement x="101" y="41" width="357" height="216" uuid="97a475ff-885f-408c-bac0-5e6cc76a3696"/>
+						<chartTitle/>
+						<chartSubtitle/>
+						<chartLegend/>
+					</chart>
+					<pieDataset>
+						<dataset>
+							<datasetRun subDataset="QuantidadeAulas" uuid="d6ef8cde-f5f5-4725-99dc-584b87566ea7"/>
+						</dataset>
+						<keyExpression><![CDATA[$F{Professor}]]></keyExpression>
+						<valueExpression><![CDATA[$F{Qtd Aulas}]]></valueExpression>
+					</pieDataset>
+					<piePlot>
+						<plot/>
+						<itemLabel/>
+					</piePlot>
+				</pieChart>
+			</frame>
+		</band>
+	</summary>
+	<noData>
+		<band height="22">
+			<staticText>
+				<reportElement x="227" y="0" width="100" height="15" forecolor="#FF000D" uuid="02465e93-8a8f-4c5b-b012-d0f1fa7faf00">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sem dados]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

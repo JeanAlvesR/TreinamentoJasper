@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="templateVeiculos1" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="a5f63c1b-9ee4-4b85-b8aa-46b1b75eb693">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="automobilistico"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="p_cpfProdutivo" class="java.lang.String"/>
+	<parameter name="p_tipoGrupo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_periodoVendasInicial" class="java.sql.Date"/>
+	<parameter name="p_periodoVendasFinal" class="java.sql.Date"/>
+	<parameter name="p_exibirTipoRelatorio" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_exibirPaginacao" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_exibirDataHoraEmissao" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_exibirResumoVendas" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select p.nome as "Produtivo", p.cpf as "CPF", vendas.data_venda as "Data Venda", 
+veic.modelo as "Modelo Veículo", veic.marca as "Marca", veic.categoria as "Categoria", veic.ano as "Ano", veic.cor as "Cor", veic.tipo as "Tipo", veic.valor_aquisicao as "Valor Aquisição",
+vendas.valor as "Valor Venda", (vendas.valor - veic.valor_aquisicao) as "Lucro", g.nome as "Grupo"
+from produtivo p 
+inner join vendas on vendas.produtivo_id = p.id 
+inner join veiculo veic on veic.id = vendas.veiculo_id 
+inner join grupo g on p.grupo = g.id 
+where 1=1
+and   $P{p_tipoGrupo}  != 0 and  $P{p_tipoGrupo} = p.grupo
+and vendas.data_venda between  $P{p_periodoVendasInicial} and  $P{p_periodoVendasFinal} 
+or 1=1 
+and  $P{p_tipoGrupo}  = 0 and p.cpf =  $P{p_cpfProdutivo} 
+and vendas.data_venda between  $P{p_periodoVendasInicial} and  $P{p_periodoVendasFinal} 
+group by p.nome, p.cpf, vendas.data_venda, 
+veic.modelo, veic.marca, veic.categoria, veic.ano, veic.cor, veic.tipo, veic.valor_aquisicao,
+vendas.valor, g.nome
+order by p.nome]]>
+	</queryString>
+	<field name="Produtivo" class="java.lang.String"/>
+	<field name="CPF" class="java.lang.String"/>
+	<field name="Data Venda" class="java.util.Date"/>
+	<field name="Modelo Veículo" class="java.lang.String"/>
+	<field name="Marca" class="java.lang.String"/>
+	<field name="Categoria" class="java.lang.String"/>
+	<field name="Ano" class="java.lang.Integer"/>
+	<field name="Cor" class="java.lang.String"/>
+	<field name="Tipo" class="java.lang.String"/>
+	<field name="Valor Aquisição" class="java.math.BigDecimal"/>
+	<field name="Valor Venda" class="java.math.BigDecimal"/>
+	<field name="Lucro" class="java.math.BigDecimal"/>
+	<field name="Grupo" class="java.lang.String"/>
+	<variable name="exibirTipoRelatorio" class="java.lang.Boolean">
+		<initialValueExpression><![CDATA[false]]></initialValueExpression>
+	</variable>
+	<variable name="totalQuantidadeVendas" class="java.lang.Integer" resetType="Group" resetGroup="Grupo Produtivo" calculation="Sum">
+		<variableExpression><![CDATA[1]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="totalValorAquisicao" class="java.math.BigDecimal" resetType="Group" resetGroup="Grupo Produtivo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Valor Aquisição}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<variable name="totalValorVenda" class="java.math.BigDecimal" resetType="Group" resetGroup="Grupo Produtivo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Valor Venda}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<variable name="totalLucro" class="java.math.BigDecimal" resetType="Group" resetGroup="Grupo Produtivo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Lucro}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<group name="Grupo Produtivo">
+		<groupExpression><![CDATA[$F{Produtivo}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="185" height="15" backcolor="#949494" uuid="7aade6e8-fcff-4b64-afe3-e6d1c716f825">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Produtivo: "+$F{Produtivo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="370" y="0" width="185" height="15" backcolor="#949494" uuid="8608b841-59fb-4d52-91fa-4205171c740d">
+						<printWhenExpression><![CDATA[$P{p_tipoGrupo} == 0 ? false : true]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Grupo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="185" y="0" width="185" height="15" backcolor="#949494" uuid="4463a2af-9d8b-43eb-9650-a43e1ebc1795"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["CPF: " + $F{CPF}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="362" y="15" width="78" height="15" backcolor="#DBDBDB" uuid="ad445e1d-99f1-4bd7-b7be-ecf35cf6b7f2">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Valor Aquisição]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="440" y="15" width="65" height="15" backcolor="#DBDBDB" uuid="fc7da4f8-f9e3-44aa-83ed-ebc4f18ef91c"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Valor Venda]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="15" width="53" height="15" backcolor="#DBDBDB" uuid="b3ed3dd9-0546-471c-b773-fb4429a4e6e6"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data Venda]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="310" y="15" width="52" height="15" backcolor="#DBDBDB" uuid="491b45e6-61d8-40a3-8cab-29df2b8ca1cc"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tipo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="255" y="15" width="55" height="15" backcolor="#DBDBDB" uuid="473e88ed-7aed-4e2f-bf59-c0d2c34c7186"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cor]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="163" y="15" width="47" height="15" backcolor="#DBDBDB" uuid="fb2fa364-daf4-471b-b94b-d87e04326eb6"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Categoria]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="210" y="15" width="45" height="15" backcolor="#DBDBDB" uuid="8eeecc5d-4c7d-42cd-a003-dc3aea1f0a0f"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ano]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="108" y="15" width="55" height="15" backcolor="#DBDBDB" uuid="e7e0e62e-4d7f-4b9e-b9ce-932178050dd9"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Marca]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="505" y="15" width="50" height="15" backcolor="#DBDBDB" uuid="b387f43e-32fb-461d-a952-1599b3df30bd"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Lucro]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="53" y="15" width="55" height="15" backcolor="#DBDBDB" uuid="f446a3e7-f9da-462f-928e-6a66dc0babb9"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Modelo Veículo]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="33">
+				<textField evaluationTime="Group" evaluationGroup="Grupo Produtivo">
+					<reportElement x="0" y="0" width="100" height="15" uuid="cc9c01c8-2ba3-41eb-b2d8-164d4c98f2b2">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Qtd vendas: "+$V{totalQuantidadeVendas}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="Grupo Produtivo">
+					<reportElement x="100" y="0" width="146" height="15" uuid="55095dd1-f62c-4296-98e1-8157f8c0d9bc">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total Aquisição: R$" + $V{totalValorAquisicao}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="Grupo Produtivo">
+					<reportElement x="246" y="0" width="135" height="15" uuid="cb749e50-7a04-4747-9f34-05b10d213cd3">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total Vendas: R$" + $V{totalValorVenda}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="Grupo Produtivo">
+					<reportElement x="381" y="0" width="157" height="15" uuid="7222aee2-5730-43ba-9923-aee70bf3359a">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total Lucro: R$" + $V{totalLucro}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="60" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="60" uuid="adee7c43-791f-4879-ae1e-9c063a155bb4"/>
+			</rectangle>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="477" y="45" width="76" height="14" uuid="b239afd5-a82a-4dde-be16-cd0e855b17ef">
+					<printWhenExpression><![CDATA[$P{p_exibirDataHoraEmissao}]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Horário: "+new SimpleDateFormat("HH:mm").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="61" y="44" width="494" height="1" uuid="28ac9fdb-8a18-4d31-9379-931d2d73f6a5"/>
+			</line>
+			<staticText>
+				<reportElement x="169" y="0" width="219" height="30" uuid="e2865d87-8118-4d5b-90b8-a87cbafd7682"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Support → RELATÓRIO VENDAS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="61" y="44" width="129" height="15" uuid="4bb0764c-1142-4510-8d8a-f2c200b19df7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Presidente Prudente"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="0" width="60" height="60" uuid="9ee51f8f-bfac-48ef-8e37-3e2a10db9524"/>
+			</rectangle>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="391" y="45" width="79" height="15" uuid="7dd6d6d8-2877-48b6-be36-7f0a8df66e78">
+					<printWhenExpression><![CDATA[$P{p_exibirDataHoraEmissao}]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data: "+new SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="15" y="14" width="30" height="33" uuid="ee87b14a-314d-45ee-9c66-574e36c3b8d0"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[∰]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="391" y="8" width="162" height="15" uuid="7071d41a-3c41-4819-a886-68fbb9d56a5f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{p_exibirTipoRelatorio}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Relatório " + ($P{p_tipoGrupo} == 0 ? "Individual" : $F{Grupo} )]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="60" y="30" width="495" height="1" uuid="b46b2775-cc67-45b0-b6a8-1062c64a90e1"/>
+			</line>
+			<textField>
+				<reportElement positionType="Float" x="513" y="30" width="9" height="15" uuid="a54855cb-ce6b-4ed5-a52a-a3be03f1280f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{p_exibirPaginacao}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="545" y="30" width="10" height="15" uuid="ba96a034-87b2-48cd-978f-c3f9a62eef11">
+					<printWhenExpression><![CDATA[$P{p_exibirPaginacao}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="494" y="30" width="19" height="15" uuid="ebba9188-3335-4948-91ee-4837b1915be3">
+					<printWhenExpression><![CDATA[$P{p_exibirPaginacao}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pág"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="522" y="30" width="23" height="15" uuid="01e27175-d675-465f-a13f-52b6c67889ea">
+					<printWhenExpression><![CDATA[$P{p_exibirPaginacao}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de "]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="53" height="15" uuid="441fd0be-e251-4c8b-9715-2f801c7f479e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{Data Venda})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="53" y="0" width="55" height="15" uuid="3b308785-1887-49d5-9e1f-c6e0c6ee3f44"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Modelo Veículo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="108" y="0" width="55" height="15" uuid="f7505de8-1da4-40f4-aa49-cb24422f4c33"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Marca}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="163" y="0" width="47" height="15" uuid="5673286b-f514-4cb2-90f0-b6725d0fe05d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Categoria}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="0" width="45" height="15" uuid="847f852f-cb35-4063-b175-ccada1c07fce"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Ano}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="255" y="0" width="55" height="15" uuid="51a114aa-2fb1-4fe0-95d7-adbffc363b1c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="0" width="52" height="15" uuid="c94da695-2970-4a18-80ae-e4c1fcd39968">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Tipo}.equals("N")? "Novo" : "Usado"]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.##;¤-#,##0.##">
+				<reportElement x="362" y="0" width="78" height="15" uuid="f2e58b77-4b6c-4ba4-8678-465257a64bcd"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Valor Aquisição}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.##;¤-#,##0.##">
+				<reportElement x="440" y="0" width="65" height="15" uuid="6cdd08d7-15ce-484b-9831-a91a4f15c681"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Valor Venda}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.##;¤-#,##0.##">
+				<reportElement x="505" y="0" width="50" height="15" uuid="945432f9-fe9c-4ae7-834d-7f06ad64a4a9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Lucro}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="14" splitType="Stretch">
+			<staticText>
+				<reportElement x="398" y="0" width="157" height="14" forecolor="#787878" uuid="cc72684d-54ed-4338-8fb2-6782711f9846"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans Mono"/>
+				</textElement>
+				<text><![CDATA[Jean Alves Rocha - Support]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="33" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="10" width="400" height="23" uuid="9e8b41f1-46de-4a3a-adbd-781f32702e8d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["C:/Users/jeana/JaspersoftWorkspace/MyReports/templateSubrelatorioVendasVeiculos.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+	<noData>
+		<band height="23">
+			<staticText>
+				<reportElement x="227" y="0" width="100" height="15" forecolor="#FF000D" uuid="248899ee-58bb-4bab-8058-fe261dacbea6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sem dados]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="templateVeiculo2" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="fd70c3ee-92c3-4573-b69f-6e45abe819d0">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="automobilistico"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="p_cpfInicial" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_cpfFinal" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[999999999]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_filtroMarca" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_filtroCategoria" class="java.lang.String">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_periodoVendasInicial" class="java.sql.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="p_periodoVendasFinal" class="java.sql.Date"/>
+	<parameter name="p_exibirCarroNovo" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_exibirCarroUsado" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_exibirTipoRelatorio" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_exibirPaginacao" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_exibirDataHoraEmissao" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select p.nome as "Produtivo", p.cpf as "CPF", vendas.data_venda as "Data Venda", 
+veic.modelo as "Modelo Veículo", veic.marca as "Marca", veic.categoria as "Categoria", veic.ano as "Ano", veic.cor as "Cor", veic.tipo as "Tipo", veic.valor_aquisicao as "Valor Aquisição",
+vendas.valor as "Valor Venda", (vendas.valor - veic.valor_aquisicao) as "Lucro", g.nome as "Grupo"
+from produtivo p 
+inner join vendas on vendas.produtivo_id = p.id 
+inner join veiculo veic on veic.id = vendas.veiculo_id 
+inner join grupo g on p.grupo = g.id 
+where 1=1
+and (p.cpf = $P{p_cpfInicial} and $P{p_cpfFinal} = $P{p_cpfInicial} or
+p.cpf between  $P{p_cpfInicial}   and $P{p_cpfFinal}) 
+and ($P{p_filtroMarca} != '0' and veic.marca =  $P{p_filtroMarca} or $P{p_filtroMarca} = '0')
+and ($P{p_filtroCategoria} != '0' and veic.categoria = $P{p_filtroCategoria} or $P{p_filtroCategoria} = '0')
+and vendas.data_venda between  $P{p_periodoVendasInicial} and  $P{p_periodoVendasFinal}
+group by p.nome, p.cpf, vendas.data_venda, 
+veic.modelo, veic.marca, veic.categoria, veic.ano, veic.cor, veic.tipo, veic.valor_aquisicao,
+vendas.valor, g.nome
+order by p.nome]]>
+	</queryString>
+	<field name="Produtivo" class="java.lang.String"/>
+	<field name="CPF" class="java.lang.String"/>
+	<field name="Data Venda" class="java.util.Date"/>
+	<field name="Modelo Veículo" class="java.lang.String"/>
+	<field name="Marca" class="java.lang.String"/>
+	<field name="Categoria" class="java.lang.String"/>
+	<field name="Ano" class="java.lang.Integer"/>
+	<field name="Cor" class="java.lang.String"/>
+	<field name="Tipo" class="java.lang.String"/>
+	<field name="Valor Aquisição" class="java.math.BigDecimal"/>
+	<field name="Valor Venda" class="java.math.BigDecimal"/>
+	<field name="Lucro" class="java.math.BigDecimal"/>
+	<field name="Grupo" class="java.lang.String"/>
+	<group name="Grupo Vendedor">
+		<groupExpression><![CDATA[$F{Produtivo}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<staticText>
+					<reportElement mode="Opaque" x="84" y="15" width="42" height="15" backcolor="#8247FF" uuid="b8ea63ef-6912-49cb-acb4-280e54108c73"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Tipo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="126" y="15" width="90" height="15" backcolor="#8247FF" uuid="58af4d02-baa9-4951-920d-4257baa81dcb"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Valor Aquisição]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="42" y="15" width="42" height="15" backcolor="#8247FF" uuid="db6bbce8-94b1-4092-bc62-ea84671d532e"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Marca]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="216" y="15" width="68" height="15" backcolor="#8247FF" uuid="4bd309bd-ec96-4780-a5d4-1f483d33a89a"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Valor Venda]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="284" y="15" width="62" height="15" backcolor="#8247FF" uuid="9bc5439d-c73b-46e4-82f7-a84640118e9b"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Lucro]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="15" width="42" height="15" backcolor="#8247FF" uuid="c7a9d08f-d5fb-4ace-98f4-3ffcd16bf19d"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Modelo Veículo]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="135" y="0" width="168" height="15" backcolor="#8247FF" uuid="9dec5ad0-a61e-483d-a15c-bb156d6c5153"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["CPF: "+$F{CPF}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="135" height="15" backcolor="#8247FF" uuid="9465c4d3-893a-4ee9-bc0b-e88618667dde">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Produtivo: "+ $F{Produtivo}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="346" y="15" width="48" height="15" backcolor="#8247FF" uuid="9ff9562c-17c8-45ed-a838-0929169d727f"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Data]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="59"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="77" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="60" uuid="adee7c43-791f-4879-ae1e-9c063a155bb4"/>
+			</rectangle>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="477" y="45" width="76" height="14" uuid="b239afd5-a82a-4dde-be16-cd0e855b17ef">
+					<printWhenExpression><![CDATA[$P{p_exibirDataHoraEmissao}]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Horário: "+new SimpleDateFormat("HH:mm").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="61" y="44" width="494" height="1" uuid="28ac9fdb-8a18-4d31-9379-931d2d73f6a5"/>
+			</line>
+			<staticText>
+				<reportElement x="169" y="0" width="219" height="30" uuid="e2865d87-8118-4d5b-90b8-a87cbafd7682"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Support → RELATÓRIO VENDAS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="61" y="44" width="129" height="15" uuid="4bb0764c-1142-4510-8d8a-f2c200b19df7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Presidente Prudente"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="0" width="60" height="60" uuid="9ee51f8f-bfac-48ef-8e37-3e2a10db9524"/>
+			</rectangle>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="391" y="45" width="79" height="15" uuid="7dd6d6d8-2877-48b6-be36-7f0a8df66e78">
+					<printWhenExpression><![CDATA[$P{p_exibirDataHoraEmissao}]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data: "+new SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="15" y="14" width="30" height="33" uuid="ee87b14a-314d-45ee-9c66-574e36c3b8d0"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[∰]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="391" y="8" width="162" height="15" uuid="7071d41a-3c41-4819-a886-68fbb9d56a5f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{p_exibirTipoRelatorio}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Relatório: " + ($P{p_cpfInicial}.equals($P{p_cpfFinal}) ? "Individual" : "Grupo")]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="60" y="30" width="495" height="1" uuid="b46b2775-cc67-45b0-b6a8-1062c64a90e1"/>
+			</line>
+			<textField>
+				<reportElement positionType="Float" x="513" y="30" width="9" height="15" uuid="a54855cb-ce6b-4ed5-a52a-a3be03f1280f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{p_exibirPaginacao}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="545" y="30" width="10" height="15" uuid="ba96a034-87b2-48cd-978f-c3f9a62eef11">
+					<printWhenExpression><![CDATA[$P{p_exibirPaginacao}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="494" y="30" width="19" height="15" uuid="ebba9188-3335-4948-91ee-4837b1915be3">
+					<printWhenExpression><![CDATA[$P{p_exibirPaginacao}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pág"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="522" y="30" width="23" height="15" uuid="01e27175-d675-465f-a13f-52b6c67889ea">
+					<printWhenExpression><![CDATA[$P{p_exibirPaginacao}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de "]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="174" y="15" width="42" height="15" backcolor="#FF5C59" uuid="8cb69939-303c-4731-83b5-e3bc68451d37">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Ano]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="300" y="15" width="70" height="15" backcolor="#FF5C59" uuid="0ad30e63-ec8c-4a63-b88e-734010c75668"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Valor Aquisição]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="135" y="0" width="168" height="15" backcolor="#FF5C59" uuid="ef24da5e-9614-4c83-a722-b947272e6638"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CPF: "+$F{CPF}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="216" y="15" width="42" height="15" backcolor="#FF5C59" uuid="288edc0b-0f70-4ad3-a286-5dbc8ccaf15a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Cor]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="135" height="15" backcolor="#FF5C59" uuid="596f7759-4c49-4af9-aa9c-855c5ba8914f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Produtivo: "+ $F{Produtivo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="42" y="15" width="42" height="15" backcolor="#FF5C59" uuid="da860063-3995-4882-b5a1-091d525073a1"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Modelo Veículo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="126" y="15" width="48" height="15" backcolor="#FF5C59" uuid="37ace095-df4e-486d-8855-f1ae16058219"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Categoria]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="258" y="15" width="42" height="15" backcolor="#FF5C59" uuid="3736bf25-f7f6-49dc-987d-cc4316127546"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Tipo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="84" y="15" width="42" height="15" backcolor="#FF5C59" uuid="b481eb50-598b-458f-ab9c-f1f20980deb0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Marca]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="370" y="15" width="62" height="15" backcolor="#FF5C59" uuid="818a1893-5d67-4f4e-ae4b-d69b13d1505c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Valor Venda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="15" width="42" height="15" backcolor="#FF5C59" uuid="1c5874aa-68ed-4e5c-a98e-4da0347ba22c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Data Venda]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="47" splitType="Stretch">
+			<printWhenExpression><![CDATA[($P{p_exibirCarroNovo}.equals( $P{p_exibirCarroUsado} )
+ || 
+(($P{p_exibirCarroNovo} && !$P{p_exibirCarroUsado} && $F{Tipo}.equals("N")) 
+|| 
+($P{p_exibirCarroUsado} &&  !$P{p_exibirCarroNovo} &&  $F{Tipo}.equals("U"))
+))]]></printWhenExpression>
+			<textField>
+				<reportElement x="346" y="0" width="48" height="15" uuid="859f3e34-f9ee-43c5-8be8-17747c193778"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#6830FF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Data Venda}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="42" height="15" uuid="615389e4-24e4-4515-a03e-9086fc2ed3f3"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#6830FF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Modelo Veículo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="42" y="0" width="42" height="15" uuid="530d67c7-5dc7-4c11-bdfe-6700c8e10c13"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#6830FF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Marca}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="84" y="0" width="42" height="15" uuid="a51ce670-a609-44fe-be63-5305147cfc1c"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#6830FF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Tipo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="0" width="90" height="15" uuid="813447d2-6094-4fa0-8d2b-e440b39fc0a8"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#6830FF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Valor Aquisição}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="216" y="0" width="68" height="15" uuid="ab00a61e-37c0-41ec-9a99-03bbaf8cf3ac"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#6830FF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Valor Venda}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="284" y="0" width="62" height="15" uuid="c365f1c5-0c67-46e4-9fa1-337e153e69fa">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#6830FF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Lucro}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="37">
+			<textField>
+				<reportElement x="0" y="0" width="67" height="15" uuid="ac7c1fa5-6c8c-44bc-af71-8ab81ae21c6f"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5754"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Data Venda}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="67" y="0" width="61" height="15" uuid="ff6b3d43-46be-4519-a8d1-bef1ee999eea"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5754"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Modelo Veículo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="128" y="0" width="61" height="15" uuid="cb2a8b7e-75a3-4050-ae42-a5a8cdfbcbdc"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5754"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Marca}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="189" y="0" width="61" height="15" uuid="fd9b6da6-fa8a-4030-a51f-f14a25031331"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5754"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Categoria}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="0" width="61" height="15" uuid="e819ee39-3d57-411a-8f55-d9441efbdfc0"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5754"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Ano}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="311" y="0" width="61" height="15" uuid="1944f563-8908-41d9-9bf3-08f26ce8bb1d"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5754"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="372" y="0" width="61" height="15" uuid="631e7cee-923d-4213-ab3e-e9bee5466a3d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5754"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Tipo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="433" y="0" width="61" height="15" uuid="ba715c14-8ebe-4c64-a702-1a2cf26e897c"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5754"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Valor Aquisição}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="494" y="0" width="61" height="15" uuid="6e4c7523-b86d-483c-9575-6d4cad4f5d03"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#FF5754"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Valor Venda}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="29" splitType="Stretch">
+			<staticText>
+				<reportElement x="398" y="0" width="157" height="14" forecolor="#787878" uuid="b634aaef-450e-4d0a-af8f-e3523347d29c"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans Mono"/>
+				</textElement>
+				<text><![CDATA[Jean Alves Rocha - Support]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+	<noData>
+		<band height="30">
+			<staticText>
+				<reportElement x="227" y="0" width="100" height="15" forecolor="#FF000D" uuid="50c3664d-e850-4c05-9d25-116893d02ae6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sem dados]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

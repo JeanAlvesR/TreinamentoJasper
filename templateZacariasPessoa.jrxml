@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="templateZacariasPessoa" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="02049b25-330c-4d4f-8e54-f0351c95b482">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="zacarias"/>
+	<parameter name="PTipoRelatorio" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="temHomem" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="temMulher" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dataEmissao" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="paginacao" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dataInicial" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="dataFinal" class="java.util.Date"/>
+	<queryString language="SQL">
+		<![CDATA[select pes.nome as "Filho", pes.datanascimento as "Data Nasc.", pes.cidade as "Cidade Atual", pes.estado as "UF", pai.nome as "Pai", mae.nome as "Mae", pes.sexo 
+from pessoa pes
+inner join paternidade pater on pes.numeropaternidade = pater.numero 
+inner join pessoa pai on pai.codigo = pater.codigopai 
+inner join pessoa mae on mae.codigo = pater.codigomae
+where pes.datanascimento between  $P{dataInicial}  and  $P{dataFinal} 
+group by pes.cidade,pes.nome, pes.datanascimento, pes.estado,pai.nome, mae.nome , pes.sexo 
+order by pes.cidade]]>
+	</queryString>
+	<field name="Filho" class="java.lang.String"/>
+	<field name="Data Nasc." class="java.util.Date"/>
+	<field name="Cidade Atual" class="java.lang.String"/>
+	<field name="UF" class="java.lang.String"/>
+	<field name="Pai" class="java.lang.String"/>
+	<field name="Mae" class="java.lang.String"/>
+	<field name="sexo" class="java.lang.String"/>
+	<variable name="totalMulheres" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$P{temMulher} == true && $F{sexo}.equals("F") ||  (($P{temMulher} == false && $P{temHomem} == false) && $F{sexo}.equals("F") ) ? 1 : 0 ]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="totalHomens" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$P{temHomem} == true && $F{sexo}.equals("M") ||  (($P{temMulher} == false && $P{temHomem} == false) && $F{sexo}.equals("M") ) ? 1 : 0]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<group name="Grupo Cidade">
+		<groupExpression><![CDATA[$F{Cidade Atual}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<printWhenExpression><![CDATA[$P{PTipoRelatorio} != 1.00]]></printWhenExpression>
+				<staticText>
+					<reportElement x="372" y="15" width="89" height="15" uuid="405d4354-9267-4248-9cce-97e6683833e7"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Mãe]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="0" width="95" height="15" forecolor="#FF0400" uuid="5a346b50-fbf5-4787-b4a2-4f2c1ab934fb">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#000000"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cidade Atual]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="279" y="15" width="93" height="15" uuid="4e1c0ca4-5a19-4423-9b4c-e9a3e5520a48"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Pai]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="15" width="95" height="15" uuid="3a325d70-5244-4d47-bf67-dbe782f0b38f"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Filho]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="184" y="15" width="95" height="15" uuid="376b6855-750c-4632-b1ba-9ebb79aacca8"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[UF]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="95" y="15" width="89" height="15" uuid="c69713d4-83b9-4039-a95d-a23353c6432c"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data Nasc.]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="95" y="0" width="89" height="15" forecolor="#FF0400" uuid="22a51e03-f17d-47b4-a1dd-aa8065637d9b"/>
+					<box>
+						<pen lineColor="#000000"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Cidade Atual}]]></textFieldExpression>
+				</textField>
+			</band>
+			<band height="30">
+				<printWhenExpression><![CDATA[$P{PTipoRelatorio} == 1.00 ]]></printWhenExpression>
+				<staticText>
+					<reportElement x="0" y="15" width="95" height="15" uuid="05bbd554-c777-4497-a013-aa001a152d37"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Pai]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="95" y="15" width="89" height="15" uuid="e5556a7f-63e0-4bb4-b89d-d86fe954bf44"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Mãe]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="184" y="15" width="95" height="15" uuid="31aed453-dda3-4b92-a7b6-ba6a18784e30"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Filho]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="279" y="15" width="93" height="15" uuid="091cc843-4b6c-479c-95e8-1aa9478c8fba"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[UF]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="372" y="15" width="89" height="15" uuid="dd520546-7e93-46f2-a979-791debd37afe"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data Nasc.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="0" width="95" height="15" forecolor="#FF0400" uuid="57606120-c5e5-41d0-87bc-3deb234d768e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#000000"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cidade Atual]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="95" y="0" width="89" height="15" forecolor="#FF0400" uuid="059a842d-4c46-4b7b-a9b0-9077a7e175b2"/>
+					<box>
+						<pen lineColor="#000000"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Cidade Atual}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16">
+				<printWhenExpression><![CDATA[$P{PTipoRelatorio} != 1.00]]></printWhenExpression>
+			</band>
+			<band height="18">
+				<printWhenExpression><![CDATA[$P{PTipoRelatorio} == 1.00]]></printWhenExpression>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="555" height="54" uuid="269a2cb4-7378-4721-8967-369cd7db1536"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<line>
+					<reportElement x="95" y="0" width="1" height="54" uuid="35f5997b-9473-48c4-b9c8-5ee86549b769"/>
+				</line>
+				<staticText>
+					<reportElement x="29" y="13" width="35" height="31" uuid="93768849-7a4b-499d-af74-2038c9bc4bc4"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans Mono" size="24" isBold="true"/>
+					</textElement>
+					<text><![CDATA[M]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="160" y="18" width="278" height="26" uuid="af53de5e-72cf-4884-9137-31c490db71da"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans Mono" size="18" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Relatório Zacarias]]></text>
+				</staticText>
+				<textField pattern="MMMMM dd, yyyy">
+					<reportElement x="481" y="38" width="72" height="14" uuid="c2b846a4-fe3c-446e-bcc2-dd6872d83687">
+						<printWhenExpression><![CDATA[$P{dataEmissao}]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font fontName="DejaVu Sans Mono"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date())]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="456" y="9" width="87" height="30" uuid="82d3efca-263a-46f0-b0e8-6459f982dd98"/>
+					<textFieldExpression><![CDATA["TIPO: " +($P{PTipoRelatorio} != 1 ? 0 : 1)]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</title>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<printWhenExpression><![CDATA[($P{PTipoRelatorio} != 1.00) && (  ($P{temHomem}  == true  &&  $F{sexo}.equals("M"))   ||  ($P{temMulher}   == true && $F{sexo}.equals("F"))  ) || ($P{temHomem} == false && $P{temMulher}==false && $P{PTipoRelatorio} != 1.00 )]]></printWhenExpression>
+			<textField>
+				<reportElement x="0" y="0" width="95" height="15" uuid="a3c1dad6-e102-4895-a6ea-329febf6581e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Filho}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="0" width="89" height="15" uuid="90442c9f-28e6-4605-89e2-87de2297684a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{Data Nasc.})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="184" y="0" width="95" height="15" uuid="1afe99c2-2f3b-4063-85e3-68316bf5368a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UF}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="279" y="0" width="93" height="15" uuid="82371666-3aa1-4850-bc6b-24d58f3ecf08"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Pai}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="372" y="0" width="89" height="15" uuid="bf19ccd2-db9e-47fa-a83d-3a82f05cb1e4"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Mae}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="15">
+			<printWhenExpression><![CDATA[($P{PTipoRelatorio} == 1.00) && (  ($P{temHomem}  == true  &&  $F{sexo}.equals("M"))   ||  ($P{temMulher}   == true && $F{sexo}.equals("F"))  ) || ($P{temHomem} == false && $P{temMulher}==false && $P{PTipoRelatorio} == 1.00)]]></printWhenExpression>
+			<textField>
+				<reportElement x="0" y="0" width="95" height="15" uuid="9a0158d0-1b28-463f-9b05-74244492a062"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Pai}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="0" width="89" height="15" uuid="de530cce-f26f-4aca-9eac-ec741bb240f6"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Mae}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="184" y="0" width="95" height="15" uuid="64973ceb-4968-4df8-b34b-6b593e15c634">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Filho}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="279" y="0" width="93" height="15" uuid="17347bd5-9166-4b91-94f0-929df9f5f209"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UF}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="372" y="0" width="89" height="15" uuid="54c08499-d2d1-4983-a8d2-5da315467a18"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{Data Nasc.})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="45" splitType="Stretch">
+			<textField>
+				<reportElement x="436" y="1" width="74" height="30" uuid="2ba6aaf9-b184-4e2e-9e48-c6251a61b0f5">
+					<printWhenExpression><![CDATA[$P{paginacao}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="510" y="1" width="44" height="30" uuid="4c8ea162-2557-4502-b780-7356aa8875d5">
+					<printWhenExpression><![CDATA[$P{paginacao}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="420" y="31" width="134" height="14" forecolor="#787878" uuid="74ad29ab-84d1-41ff-8650-2c204bbe137e"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Jean Alves Rocha - Support]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="58" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="20" width="170" height="30" uuid="711b8956-f031-4275-a5be-7339a454689b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total de Homens: "+$V{totalHomens}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="171" y="20" width="219" height="30" uuid="01e1f663-966c-412c-a813-1f8b12e118f0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total Mulheres: "+$V{totalMulheres}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="160" y="18" width="270" height="26" forecolor="#FF0905" uuid="866e5ddb-ce46-45ca-8299-8497785f395a"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans Mono" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sem dados]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

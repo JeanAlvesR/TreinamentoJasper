@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="templateTransporteAgrupamentoCidade" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bc81f54a-29a4-4d6f-b7fc-42dbbd75fc84">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Transportadora"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[select  f.cidadeorigem, f.datadeembarque, f.valordamercadoria, f.pesodamercadoria,  f.valordofrete, rem.nome as "remetente",  dest.nome as "nome_destinatario"
+from frete f 
+inner join cliente rem on  rem.codigo = f.codigoremetente 
+inner join cliente dest on dest.codigo = f.codigodestinatario
+group by f.cidadeorigem,  f.datadeembarque, f.valordamercadoria, f.pesodamercadoria, f.valordofrete,  rem.nome,  dest.nome 
+order by f.cidadeorigem]]>
+	</queryString>
+	<field name="cidadeorigem" class="java.lang.String"/>
+	<field name="datadeembarque" class="java.util.Date"/>
+	<field name="valordamercadoria" class="java.math.BigDecimal"/>
+	<field name="pesodamercadoria" class="java.math.BigDecimal"/>
+	<field name="valordofrete" class="java.math.BigDecimal"/>
+	<field name="remetente" class="java.lang.String"/>
+	<field name="nome_destinatario" class="java.lang.String"/>
+	<variable name="total_mercadoria" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{valordamercadoria}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="total_mercadoria_por_cidade" class="java.lang.Double" resetType="Group" resetGroup="Agrupamento Cidade" calculation="Sum">
+		<variableExpression><![CDATA[$F{valordamercadoria}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="peso_total" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{pesodamercadoria}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="total_frete" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{valordofrete}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="qtd_frete" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{valordofrete}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<group name="Agrupamento Cidade">
+		<groupExpression><![CDATA[$F{cidadeorigem}]]></groupExpression>
+		<groupHeader>
+			<band height="35">
+				<staticText>
+					<reportElement x="0" y="0" width="82" height="15" uuid="b12b75ed-f694-4e4c-b8d4-bf393b025021"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Cidade]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="82" y="0" width="82" height="15" uuid="b5ce8e3a-47ce-4cfc-b151-336a3eee66c9">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="9"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cidadeorigem}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="15" width="50" height="20" uuid="9ff39236-2c50-40ca-a5e1-2968a43adb28"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Data]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="198" y="15" width="80" height="20" uuid="3545d3ec-7bbc-40f6-b929-cd95d8828ced"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Remetente]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="122" y="15" width="28" height="20" uuid="3e3aca71-d37c-4c61-9acd-8deba4b64256"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Peso (kg)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="278" y="15" width="86" height="20" uuid="eb5d4315-a45f-438c-a371-9f109ed6ff30"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Destinatário]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="50" y="15" width="72" height="20" uuid="4ec23d93-b248-440d-8fb7-970381b52ef7"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Mercadoria]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="150" y="15" width="48" height="20" uuid="70a0f220-8370-4c53-a57f-501735d9ea65"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<text><![CDATA[Frete]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="37">
+				<textField>
+					<reportElement x="422" y="7" width="100" height="30" uuid="2af8aa93-612d-4136-af1b-0872ecb24736"/>
+					<textElement>
+						<font fontName="DejaVu Sans Mono"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Por cidade: "+$V{total_mercadoria_por_cidade}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="89" splitType="Stretch">
+			<staticText>
+				<reportElement x="162" y="0" width="230" height="30" uuid="9cc767cd-f996-4fbc-9b9d-4c5068e32e10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Relatório Fretes]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="460" y="50" width="95" height="30" uuid="60ee8768-e0e6-46e1-a78c-5bf0d81e9706"/>
+				<textElement>
+					<font fontName="DejaVu Sans Mono"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="10" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="198" y="0" width="80" height="15" uuid="7e944239-7dd1-436c-8966-5560375abd7f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{remetente}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement x="50" y="0" width="72" height="15" uuid="07b1909e-dec9-42d3-a424-f2d8a9bf856b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valordamercadoria}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="50" height="15" uuid="658ac107-4602-4acf-a868-b5518a5a4280"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{datadeembarque})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="278" y="0" width="86" height="15" uuid="bf5d225b-a049-4a75-a02b-ec040e06417a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_destinatario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="122" y="0" width="28" height="15" uuid="e7422092-76a6-401f-8615-18821561be64"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pesodamercadoria}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement x="150" y="0" width="48" height="15" uuid="b9f4db49-1b7d-4ee9-a9cf-72340a5e3d8f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="9"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valordofrete}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="355" y="24" width="100" height="30" uuid="1c133be2-2351-4a5e-aeba-3cf468ce03fe"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans Mono"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="455" y="24" width="100" height="30" uuid="52c973c9-2ec1-4377-a355-4e3375d53ffc"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans Mono"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="62" splitType="Stretch">
+			<textField pattern="">
+				<reportElement x="0" y="10" width="208" height="30" uuid="e6a5e403-2bf8-400c-93d1-3ccc92dc8a23"/>
+				<textElement>
+					<font fontName="DejaVu Sans Mono"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Valor total mercadoria: "+$V{total_mercadoria}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="208" y="10" width="100" height="30" uuid="c2595af1-6a47-4a0a-b434-1188e56edee3"/>
+				<textElement>
+					<font fontName="DejaVu Sans Mono"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Peso total: "+$V{peso_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="308" y="10" width="100" height="30" uuid="9a400b1f-0fa3-4cd9-9571-81c594685362"/>
+				<textElement>
+					<font fontName="DejaVu Sans Mono"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total frete: "+$V{total_frete}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="10" width="145" height="30" uuid="41dda4c8-888b-424c-91f6-0698c660c7f4"/>
+				<textElement>
+					<font fontName="DejaVu Sans Mono"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Qtd de fretes:  "+$V{qtd_frete}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

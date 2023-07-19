@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TemplateCirurgicoLista" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f2f88412-4a4c-40e3-9499-ba513d2d6c14">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="zacarias"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<subDataset name="Falecidos" uuid="3d0d6e12-6cce-44e5-9007-aab2f1024abc">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="zacarias"/>
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<parameter name="pNumeroCemiterioInterno" class="java.lang.Integer">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<queryString>
+			<![CDATA[select p.datanascimento as "Data Nascimento", p.nome as "Falecido", p.sexo as "Sexo", p.cidadenatal as "Cidade Natal" 
+from pessoa p 
+inner join falecimento f on f.codigopessoa = p.codigo 
+inner join cemiterio c on c.numero = f.numerocemiterio
+where c.numero =  $P{pNumeroCemiterioInterno}]]>
+		</queryString>
+		<field name="Data Nascimento" class="java.util.Date"/>
+		<field name="Falecido" class="java.lang.String"/>
+		<field name="Sexo" class="java.lang.String"/>
+		<field name="Cidade Natal" class="java.lang.String"/>
+		<variable name="totalFalecidosInterno" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[1]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+	</subDataset>
+	<queryString>
+		<![CDATA[select c.numero as "Cemitério", c.estado as "Estado", c.cidade as "Cidade" 
+from cemiterio c
+order by c.numero]]>
+	</queryString>
+	<field name="Cemitério" class="java.lang.Integer"/>
+	<field name="Estado" class="java.lang.String"/>
+	<field name="Cidade" class="java.lang.String"/>
+	<variable name="totalGeralFalecidosExterno" class="java.lang.Integer" calculation="System">
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="totalPorGrupoExterno" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{totalGeralFalecidosExterno}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="555" height="54" uuid="b39decfd-0610-4466-a23a-9448636bc8ba"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<line>
+					<reportElement x="95" y="0" width="1" height="54" uuid="45815b6c-7c64-48af-98aa-895463025cd4"/>
+				</line>
+				<staticText>
+					<reportElement x="29" y="13" width="35" height="31" uuid="77cf4233-b880-466b-b2f8-37a5f55860b1"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans Mono" size="24" isBold="true"/>
+					</textElement>
+					<text><![CDATA[M]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="141" y="19" width="350" height="26" uuid="9364822c-8b07-48df-a845-19f589d43186"/>
+					<textElement textAlignment="Center">
+						<font fontName="DejaVu Sans Mono" size="18" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Relatório Zacarias - Lista]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="185" height="15" forecolor="#2635FF" uuid="eb51ae7b-20e4-4e8e-857b-243f76348204"/>
+				<box>
+					<pen lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEMITÉRIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="185" y="0" width="185" height="15" forecolor="#2635FF" uuid="2a1d07bf-f232-4b30-b268-dff410733fab"/>
+				<box>
+					<pen lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="370" y="0" width="185" height="15" forecolor="#2635FF" uuid="e3b039f0-cf64-4653-a22a-d2d7310f5997">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CIDADE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="101" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="185" height="15" forecolor="#3908FF" uuid="e579ceaf-e9cc-490f-8e09-ca52492b2cc9"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cemitério}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="185" y="0" width="185" height="15" forecolor="#3908FF" uuid="a222fb99-1dcb-4156-afbc-c5f2634056b1"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Estado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="370" y="0" width="185" height="15" forecolor="#3908FF" uuid="5744db9c-b712-45aa-afcf-831bee5cc9d9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cidade}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="0" y="15" width="555" height="60" uuid="cfa083bb-8d0f-465b-ad32-b22e050bada1"/>
+				<componentElement>
+					<reportElement x="0" y="15" width="555" height="15" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="3ce1b732-21aa-4ab0-a2ce-ad56c107510f"/>
+					<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+						<datasetRun subDataset="Falecidos" uuid="315b8e1d-c1ec-46d0-92b7-5a84a3035710">
+							<datasetParameter name="pNumeroCemiterioInterno">
+								<datasetParameterExpression><![CDATA[$F{Cemitério}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+							<returnValue fromVariable="totalFalecidosInterno" toVariable="totalGeralFalecidosExterno" calculation="Sum"/>
+						</datasetRun>
+						<jr:listContents height="15" width="555">
+							<textField>
+								<reportElement x="0" y="0" width="130" height="15" forecolor="#000000" uuid="6a87424a-6eaa-4572-8d1d-843a5c2c0dbc">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans Mono" size="8"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{Data Nascimento})]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="130" y="0" width="130" height="15" forecolor="#000000" uuid="89478733-d8c9-4cb8-a373-91b69a0d7b6a">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans Mono" size="8"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{Falecido}]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="260" y="0" width="140" height="15" forecolor="#000000" uuid="e8cb4b69-422c-408f-9c4c-c9e4adb49cad">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans Mono" size="8"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{Sexo}.equals("M") ? "Masculino" : "Feminino"]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="400" y="0" width="155" height="15" forecolor="#000000" uuid="e98dc886-8ce5-471f-9f9f-09fb54c30a0b">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans Mono" size="8"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{Cidade Natal}]]></textFieldExpression>
+							</textField>
+						</jr:listContents>
+					</jr:list>
+				</componentElement>
+				<staticText>
+					<reportElement x="0" y="0" width="130" height="15" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#A19F9F" uuid="10d6c453-687b-4749-82f2-3bd2420fe9c6"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data Nascimento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="130" y="0" width="130" height="15" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#A19F9F" uuid="3a8e70b9-b4bb-4f00-b8a0-4c945479fbb0"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Falecido]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="260" y="0" width="140" height="15" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#A19F9F" uuid="e3a083dd-6074-4daf-bb80-ba50f147b9e2"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Sexo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="400" y="0" width="155" height="15" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#A19F9F" uuid="c3a50f10-4eeb-4bf2-9bfd-07097fd2804c"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cidade Natal]]></text>
+				</staticText>
+				<textField evaluationTime="Band" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="0" y="30" width="130" height="15" uuid="a71e208e-7281-4081-99bd-bf72bcab9b92">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#00FF51"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#00FF51"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#00FF51"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#00FF51"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#00FF51"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans Mono" size="8" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total por grupo: "+($V{totalGeralFalecidosExterno} - $V{totalPorGrupoExterno})]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="24" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="420" y="31" width="134" height="14" forecolor="#787878" uuid="5783dcb5-5079-4967-a598-d615a08369b3"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Jean Alves Rocha - Support]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="436" y="1" width="74" height="30" uuid="24743252-9ffd-42de-9112-6ee6790b03ae"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="510" y="1" width="44" height="30" uuid="92ab7dac-e65f-498a-8326-0e2684c5f12a"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="0" y="15" width="130" height="30" uuid="d82936a4-a421-43f7-b92a-cc6d190942e4"/>
+				<textFieldExpression><![CDATA[$V{totalGeralFalecidosExterno}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="60" splitType="Stretch"/>
+	</summary>
+</jasperReport>

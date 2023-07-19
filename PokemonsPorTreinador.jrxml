@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PokemonsPorTreinador" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="176d903d-ba44-4d0e-866c-469d9e44793a">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Adaptador PostgreSQL"/>
+	<parameter name="PNomeTreinador" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+	treinador.nome as nomeTreinador,
+	pokemon.nome as nomePokemon,
+	pokemon.atributo,
+	pokemon.habilidades
+FROM pokemon
+	INNER JOIN treinador ON 
+	 pokemon.id_treinador = treinador.id 
+WHERE 
+	 treinador.nome like CONCAT('%',$P{PNomeTreinador}, '%')]]>
+	</queryString>
+	<field name="nomeTreinador" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nometreinador"/>
+		<property name="com.jaspersoft.studio.field.label" value="nometreinador"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="treinador"/>
+	</field>
+	<field name="nomePokemon" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nomepokemon"/>
+		<property name="com.jaspersoft.studio.field.label" value="nomepokemon"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pokemon"/>
+	</field>
+	<field name="atributo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="atributo"/>
+		<property name="com.jaspersoft.studio.field.label" value="atributo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pokemon"/>
+	</field>
+	<field name="habilidades" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="habilidades"/>
+		<property name="com.jaspersoft.studio.field.label" value="habilidades"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pokemon"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="73" y="10" width="409" height="30" uuid="5497c0f6-e4e4-47ed-a2bd-927563a17550"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial Black" size="18"/>
+				</textElement>
+				<text><![CDATA[Relatório de Pokémons por Treinador]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="48" splitType="Stretch">
+			<staticText>
+				<reportElement x="-10" y="0" width="80" height="30" uuid="0dad4920-ead1-4380-bbaf-4fa3c1e2572a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial Black" size="14"/>
+				</textElement>
+				<text><![CDATA[Treinador: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="0" width="100" height="30" forecolor="#FF0703" uuid="e1023366-bddc-427f-b412-efe70c75cca8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial Black" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomeTreinador}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="65" splitType="Stretch">
+			<staticText>
+				<reportElement x="-10" y="20" width="100" height="30" uuid="aa0aa46f-3457-480f-8d49-5db81db01943"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial Black"/>
+				</textElement>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="20" width="100" height="30" uuid="e258471d-091e-40d0-a8a6-cf817ec4ecac"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial Black"/>
+				</textElement>
+				<text><![CDATA[Atributo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="20" width="100" height="30" uuid="8af917e9-db1c-4950-b578-b037d231a918"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial Black"/>
+				</textElement>
+				<text><![CDATA[Habilidades]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="36" splitType="Stretch">
+			<textField>
+				<reportElement x="-11" y="7" width="100" height="20" uuid="2426ebef-c695-4040-a3e0-39ba3fcab835"/>
+				<textFieldExpression><![CDATA[$F{nomePokemon}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="7" width="99" height="20" uuid="4c256b59-3604-4a21-b9ad-12eca38f5893"/>
+				<textFieldExpression><![CDATA[$F{atributo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="190" y="0" width="255" height="27" uuid="46ab2e21-474c-41fd-8303-d60b033973ef"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{habilidades}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="72" splitType="Stretch">
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="-11" y="42" width="100" height="30" uuid="2a659629-0ca3-439c-ba66-e65afef46586"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="531" y="42" width="100" height="30" uuid="ef484be7-024f-406c-9b15-e46764a89b42"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
